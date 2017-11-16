@@ -38,7 +38,7 @@ Crimes included are: Violent crimes, Murder, Rape, Robbery, Aggrevated assualt, 
 ## Inputting the data and cleaning it 
 Let's first import the dataset as a csv from the hard disk and clean the columns so that they are in integers and decimals rather than characters. Click on the 'Code' button to see that we used the 'read_csv' function to read the 'Crime_US_94-13.csv' file from the hard disk of the user 'OmarOlivarez'.
 ```{r}
-df <- read_csv("/Users/OmarOlivarez/Documents/Crime_US_94-13.csv", col_types = list(
+df <- read_csv("Crime_US_94-13.csv", col_types = list(
   year = col_number(),
   violent_crime = col_number(),
   pop = col_number(),
@@ -62,7 +62,7 @@ df <- read_csv("/Users/OmarOlivarez/Documents/Crime_US_94-13.csv", col_types = l
 for(n in names(df)) {
   df[n] <- data.frame(lapply(df[n], gsub, pattern="[^ -~]", replacement= ""))
 }
-write_csv(df, "/Users/OmarOlivarez/Documents/cleanedCrimeData.csv")
+write_csv(df, "cleanedCrimeData.csv")
 ```
 Now the columns in the dataframe are either integers (for example: year) or decimals (for example: murder_rate). Click on the 'Code' button above. You can see that our team exported the new file 'cleanedCrimeData.csv' to the hard disk of the same user 'OmarOlivarez'. After this step, our team loaded the cleaned csv into data.world for the proceeding steps in the Data Science Pipeline process.
 
