@@ -1,5 +1,5 @@
 ---
-title: "Project 4"
+title: "Processing Aggravated Assault (and other Crimes) Data Through the Data Science Pipeline Method - Project 4"
 resource_files:
 - .Renviron
 output:
@@ -20,7 +20,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Github Link
 
-[Team 3 Github](https://github.com/omar-olivarez/F17eDVProject4)
+Click [here to view Team 3's Github](https://github.com/omar-olivarez/F17eDVProject4).
+
+## Data.world Project Link
+Click [here to view Team 3's Data.world Project Link](https://data.world/omarolivarez/f-17-edv-project-4).
 
 ## Introduction
 
@@ -33,6 +36,7 @@ The dataset used for all these examples is data gathered by the FBI on criminal 
 Crimes included are: Violent crimes, Murder, Rape, Robbery, Aggrevated assualt, Property crimes, Burglary, Larceny-Theft, Motor Vehicle Theft.
 
 ## Importing cleaned data from data.world
+Now let's use the data.world library to import the [US Crimes dataset](https://data.world/omarolivarez/crime-in-the-us) from data.world:
 
 ## Reformat
 
