@@ -37,6 +37,15 @@ Crimes included are: Violent crimes, Murder, Rape, Robbery, Aggrevated assualt, 
 
 ## Importing cleaned data from data.world
 Now let's use the data.world library to import the [US Crimes dataset](https://data.world/omarolivarez/crime-in-the-us) from data.world:
+```{r}
+project <- "https://data.world/omarolivarez/crime-in-the-us"
+data.world::set_config(cfg_env("DW_API"))
+df <- data.world::query(data.world::qry_sql("SELECT * FROM crime_us_94_13"), dataset = project)
+```
+Let us take a look at the dataset's column names to see which visualizations work best for the data types:
+```{r}
+names(df)
+```
 
 ## Reformat
 
