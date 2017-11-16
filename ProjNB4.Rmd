@@ -1,0 +1,41 @@
+---
+title: "Project 4"
+resource_files:
+- .Renviron
+output:
+  html_notebook:
+    code_folding: hide
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(data.world)
+library(shiny)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Github Link
+
+[Team 3 Github](https://github.com/omar-olivarez/F17eDVProject4)
+
+## Introduction
+
+This notebook contains the different steps in the Data Science Pipeline, which describes how data is imported, cleaned, exported, reformated, transformed, visualized, and communicated. Each step will be it's own section in this notebook, with the whole of this notebook serving as an example of communication.  
+
+## Description of dataset
+
+The dataset used for all these examples is data gathered by the FBI on criminal activities between the years 1994 to 2013. The data contains the total number of crimes recorded for that year and also the rate of the crime per 100000 people. 
+
+Crimes included are: Violent crimes, Murder, Rape, Robbery, Aggrevated assualt, Property crimes, Burglary, Larceny-Theft, Motor Vehicle Theft.
+
+## Importing cleaned data from data.world
+
+## Reformat
+
+## Transform
+
+## Visualize 
