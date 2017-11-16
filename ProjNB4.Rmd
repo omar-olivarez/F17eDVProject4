@@ -35,12 +35,43 @@ The dataset used for all these examples is data gathered by the FBI on criminal 
 
 Crimes included are: Violent crimes, Murder, Rape, Robbery, Aggrevated assualt, Property crimes, Burglary, Larceny-Theft, Motor Vehicle Theft.
 
-## Importing cleaned data from data.world
-Now let's use the data.world library to import the [US Crimes dataset](https://data.world/omarolivarez/crime-in-the-us) from data.world:
+## Inputting the data and cleaning it 
+Let's first import the dataset as a csv from the hard disk and clean the columns so that they are in integers and decimals rather than characters. Click on the 'Code' button to see that we used the 'read_csv' function to read the 'Crime_US_94-13.csv' file from the hard disk of the user 'OmarOlivarez'.
 ```{r}
-project <- "https://data.world/omarolivarez/crime-in-the-us"
+df <- read_csv("/Users/OmarOlivarez/Documents/Crime_US_94-13.csv", col_types = list(
+  year = col_number(),
+  violent_crime = col_number(),
+  pop = col_number(),
+  murder = col_number(),
+  murder_rate = col_number(),
+  rape = col_number(),
+  rape_rate = col_number(),
+  robbery = col_number(),
+  robbery_rate = col_number(),
+  agg_assault = col_number(),
+  aggravated_assault_rate = col_number(),
+  property_crime = col_number(),
+  property_crime_rate = col_number(),
+  burglary = col_number(),
+  burglary_rate = col_number(),
+  larceny_theft = col_number(),
+  larceny_theft_rate = col_number(),
+  motor_vehicle_theft = col_number(),
+  motor_vehicle_theft_rate = col_number()
+)) 
+for(n in names(df)) {
+  df[n] <- data.frame(lapply(df[n], gsub, pattern="[^ -~]", replacement= ""))
+}
+write_csv(df, "/Users/OmarOlivarez/Documents/cleanedCrimeData.csv")
+```
+Now the columns in the dataframe are either integers (for example: year) or decimals (for example: murder_rate). Click on the 'Code' button above. You can see that our team exported the new file 'cleanedCrimeData.csv' to the hard disk of the same user 'OmarOlivarez'. After this step, our team loaded the cleaned csv into data.world for the proceeding steps in the Data Science Pipeline process.
+
+## Importing cleaned data from data.world
+Now let's use the data.world library to import the [US Crimes dataset](https://data.world/omarolivarez/crime-in-the-united-states) from data.world:
+```{r}
+project <- "https://data.world/omarolivarez/crime-in-the-united-states"
 data.world::set_config(cfg_env("DW_API"))
-df <- data.world::query(data.world::qry_sql("SELECT * FROM crime_us_94_13"), dataset = project)
+df <- data.world::query(data.world::qry_sql("SELECT * FROM cleanedcrimedata"), dataset = project)
 ```
 Let us take a look at the dataset's column names to see which visualizations work best for the data types:
 ```{r}
