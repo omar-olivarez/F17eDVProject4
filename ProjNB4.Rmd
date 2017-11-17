@@ -85,4 +85,22 @@ names(df)
 
 ### Visualize 
 
+## Boxplot
+
+### Reformat
+
+### Transform
+
+```{r}
+bpdf <- dplyr::select(df,year,violent_crime_rate) 
+```
+
+### Visualize 
+
+```{r}
+renderPlot({ 
+  bpdf %>% ggplot() + geom_col(mapping = aes(x=year,y=violent_crime_rate))
+  })
+```
+
 In the FBI's Uniform Crime Reporting (UCR) Program, violent crime is composed of four offenses: murder and nonnegligent manslaughter, forcible rape, robbery, and aggravated assault. 
