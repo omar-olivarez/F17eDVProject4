@@ -25,11 +25,11 @@ Click [here to view Team 3's Github](https://github.com/omar-olivarez/F17eDVProj
 ## Data.world Project Link
 Click [here to view Team 3's Data.world Project Link](https://data.world/omarolivarez/f-17-edv-project-4).
 
-## Introduction
+## What are we working on? An introduction to our project
 
 This notebook contains the different steps in the Data Science Pipeline, which describes how data is imported, cleaned, exported, reformated, transformed, visualized, and communicated. Each step will be it's own section in this notebook, with the whole of this notebook serving as an example of communication.  
 
-## Description of dataset
+## What's this data? A description of the US Crimes dataset
 
 The dataset used for all these examples is data gathered by the FBI on criminal activities between the years 1994 to 2013. The data contains the total number of crimes recorded for that year and also the rate of the crime per 100000 people. 
 
@@ -40,6 +40,7 @@ Let's first import the dataset as a csv from the hard disk and clean the columns
 ```{r}
 df <- read_csv("Crime_US_94-13.csv", col_types = list(
   year = col_number(),
+  pop = col_number(),
   violent_crime = col_number(),
   pop = col_number(),
   murder = col_number(),
@@ -56,8 +57,7 @@ df <- read_csv("Crime_US_94-13.csv", col_types = list(
   burglary_rate = col_number(),
   larceny_theft = col_number(),
   larceny_theft_rate = col_number(),
-  motor_vehicle_theft = col_number(),
-  motor_vehicle_theft_rate = col_number()
+  motor_vehicle_theft = col_number()
 )) 
 for(n in names(df)) {
   df[n] <- data.frame(lapply(df[n], gsub, pattern="[^ -~]", replacement= ""))
@@ -71,16 +71,30 @@ Now let's use the data.world library to import the [US Crimes dataset](https://d
 ```{r}
 project <- "https://data.world/omarolivarez/crime-in-the-united-states"
 data.world::set_config(cfg_env("DW_API"))
-df <- data.world::query(data.world::qry_sql("SELECT * FROM cleanedcrimedata"), dataset = project)
+df <- data.world::query(data.world::qry_sql("SELECT * FROM cleanedcrimedata"), dataset = project) %>% dplyr::select(1:19)
 ```
 Let us take a look at the dataset's column names to see which visualizations work best for the data types:
 ```{r}
 names(df)
 ```
-## Scatterplot
+## Crime Rates Decreasing, But Proportions Remain the Same (Scatterplot)
 
-### Reformat
+### Changing the Data We Have to Compare Crime Rates to Crime Proportions (Reformat and Transform)
+```{r}
+df2 <- df%>% dplyr::mutate(violent_crime_rate = violent_crime_rate / 100000, murder_rate = murder_rate / 100000, rape_rate = rape_rate / 100000, robbery_rate = robbery_rate / 100000, aggravated_assault_rate = aggravated_assault_rate / 100000, property_crime_rate = property_crime_rate / 100000, burglary_rate = burglary_rate / 100000, larceny_theft_rate = larceny_theft_rate / 100000, motor_vehicle_theft_rate = motor_vehicle_theft / pop) %>%tidyr::gather(violent_crime_rate, murder_rate, rape_rate, aggravated_assault_rate, property_crime_rate, burglary_rate, larceny_theft_rate, motor_vehicle_theft_rate, key = "crime", value = "rate_per_capita")
 
+df3 <- df%>%dplyr::mutate(prop_murder = murder / (murder+rape+robbery+agg_assault+property_crime+burglary+larceny_theft+motor_vehicle_theft), prop_rape = rape / (murder+rape+robbery+agg_assault+property_crime+burglary+larceny_theft+motor_vehicle_theft), prop_robbery = robbery / (murder+rape+robbery+agg_assault+property_crime+burglary+larceny_theft+motor_vehicle_theft), prop_agg_assault = agg_assault / (murder+rape+robbery+agg_assault+property_crime+burglary+larceny_theft+motor_vehicle_theft), prop_property_crime = property_crime / (murder+rape+robbery+agg_assault+property_crime+burglary+larceny_theft+motor_vehicle_theft), prop_burglary = burglary / (murder+rape+robbery+agg_assault+property_crime+burglary+larceny_theft+motor_vehicle_theft), prop_larceny_theft = larceny_theft / (murder+rape+robbery+agg_assault+property_crime+burglary+larceny_theft+motor_vehicle_theft), prop_motor_vehicle_theft = motor_vehicle_theft / (murder+rape+robbery+agg_assault+property_crime+burglary+larceny_theft+motor_vehicle_theft)) %>% dplyr::select(year, prop_murder:prop_motor_vehicle_theft) %>% tidyr::gather(prop_murder:prop_motor_vehicle_theft, key = 'crime_type', value = 'prop_total_crime')
+
+myColors <- c("red4", "darkslategray3", "dodgerblue1", "darkcyan","gray79", "black", "skyblue2", "dodgerblue4","purple4", "maroon", "chocolate1", "bisque3", "bisque","seagreen4", "lightgreen", "skyblue4", "mediumpurple3","palevioletred1", "lightsalmon4", "darkgoldenrod1")
+
+renderPlot({ 
+  p <- ggplot()
+  p <- p + geom_smooth(data = df2, mapping = aes(x= year,y=rate_per_capita, colour = crime), size = 2)
+  p <- p + geom_smooth(data=df3, mapping = aes(x= year,y = prop_total_crime/4, colour = crime_type),  linetype = "dashed", size = 2) + scale_color_manual(values=myColors)
+  p <- p + scale_y_continuous(sec.axis = sec_axis(~.*4, name = "Proportion out of total crime"))
+  p
+  })
+```
 ### Transform
 
 ### Visualize 
@@ -95,7 +109,7 @@ names(df)
 bpdf <- dplyr::select(df,year,violent_crime_rate) 
 ```
 
-### Visualize 
+### 20 Years at a Glance: Diminished Crime Rates from 1993 to 2013 (Visualize) 
 
 ```{r}
 renderPlot({ 
