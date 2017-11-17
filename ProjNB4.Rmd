@@ -77,9 +77,12 @@ Let us take a look at the dataset's column names to see which visualizations wor
 ```{r}
 names(df)
 ```
+## Scatterplot
 
-## Reformat
+### Reformat
 
-## Transform
+### Transform
 
-## Visualize 
+### Visualize 
+
+In the FBI's Uniform Crime Reporting (UCR) Program, violent crime is composed of four offenses: murder and nonnegligent manslaughter, forcible rape, robbery, and aggravated assault. 
