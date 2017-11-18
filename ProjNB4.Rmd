@@ -69,7 +69,7 @@ Now the columns in the dataframe are either integers (for example: year) or deci
 ## Importing cleaned data from data.world
 Now let's use the data.world library to import the [US Crimes dataset](https://data.world/omarolivarez/crime-in-the-united-states) from data.world:
 ```{r}
-project <- "https://data.world/omarolivarez/crime-in-the-united-states"
+project <- "https://data.world/omarolivarez/f-17-edv-project-4"
 data.world::set_config(cfg_env("DW_API"))
 df <- data.world::query(data.world::qry_sql("SELECT * FROM cleanedcrimedata"), dataset = project) %>% dplyr::select(1:19)
 ```
@@ -110,20 +110,28 @@ df5 <- df %>% dplyr::select(violent_crime, murder, rape, robbery, agg_assault, p
 shiny::renderDataTable(df5)
 ```
 
-## Boxplot
 
+<<<<<<< HEAD
+=======
+### 20 Years at a Glance: Diminished Crime Rates from 1993 to 2013 
+The bar chart below shows the different crime rate based on the year. To get the specific colums from the csv file, select is needed combined with the input panel.
+
+>>>>>>> 7d3e692a938a160ce03960948809c0c4b885b3ad
 ```{r}
-bpdf <- dplyr::select(df,year,violent_crime_rate) 
-```
+crimes <- c("violent_crime_rate","murder_rate","rape_rate","robbery_rate","aggravated_assault_rate","property_crime_rate","burglary_rate","larceny_theft_rate")
 
-### 20 Years at a Glance: Diminished Crime Rates from 1993 to 2013 (Visualize) 
+inputPanel(
+  selectInput("selectCrime", label = "Crime:",
+              choices = crimes, multiple=FALSE, selected="violent_crime_rate")
+)
 
-```{r}
 renderPlot({ 
-  bpdf %>% ggplot() + geom_col(mapping = aes(x=year,y=violent_crime_rate))
+  kpdf2 <- df %>% dplyr::select(year,input$selectCrime) 
+  kpdf2 %>% ggplot() + geom_col(mapping = aes(x=year,y= kpdf2[2])) + scale_y_continuous(name =input$selectCrime)
   })
 ```
 
+<<<<<<< HEAD
 In the FBI's Uniform Crime Reporting (UCR) Program, violent crime is composed of four offenses: murder and nonnegligent manslaughter, forcible rape, robbery, and aggravated assault. 
 
 ### Percent rank of violent crime throughout the years. 
@@ -156,3 +164,22 @@ renderPlot({
 ```
 
 As we can see the changes in crime rates follow each other, with robbery having the highest amount of changes while larcerny and theft have the lowest changes. 
+=======
+
+## PieChart of Violent Crimes
+The pie chart below is an example of mutate to get the perecent for total violent crime. 
+
+```{r}
+kpdf1 <- data.world::query(data.world::qry_sql("SELECT year, pop, violent_crime FROM cleanedcrimedata"), dataset = project) %>% dplyr::mutate(violent_crime_per_capita = violent_crime/pop) %>% dplyr::mutate(per_total_per_capita = violent_crime_per_capita/sum(violent_crime_per_capita))
+
+kpdf1$label <- scales::percent(kpdf1$per_total_per_capita)
+
+renderPlot({
+ ggplot(kpdf1)+
+  geom_bar(aes(x="", y=per_total_per_capita, fill=year), stat="identity", width = 1)+
+  coord_polar("y", start=0) + theme_void() + 
+  geom_text(aes(x=1.35, y = cumsum(per_total_per_capita) - per_total_per_capita/2, label=label))
+})
+
+```
+>>>>>>> 7d3e692a938a160ce03960948809c0c4b885b3ad
