@@ -111,10 +111,12 @@ shiny::renderDataTable(df5)
 ```
 
 
-### 20 Years at a Glance: Diminished Crime Rates from 1993 to 2013 (Visualize) 
+### 20 Years at a Glance: Diminished Crime Rates from 1993 to 2013 
+The bar chart below shows the different crime rate based on the year. To get the specific colums from the csv file, select is needed combined with the input panel.
 
 ```{r}
-crimes <- c("violent_crime_rate","murder_rate","rape_rate","robbery_rate","aggravated_assault_rate")
+crimes <- c("violent_crime_rate","murder_rate","rape_rate","robbery_rate","aggravated_assault_rate","property_crime_rate","burglary_rate","larceny_theft_rate")
+
 inputPanel(
   selectInput("selectCrime", label = "Crime:",
               choices = crimes, multiple=FALSE, selected="violent_crime_rate")
@@ -127,7 +129,8 @@ renderPlot({
 ```
 
 
-## PieChart
+## PieChart of Violent Crimes
+The pie chart below is an example of mutate to get the perecent for total violent crime. 
 
 ```{r}
 kpdf1 <- data.world::query(data.world::qry_sql("SELECT year, pop, violent_crime FROM cleanedcrimedata"), dataset = project) %>% dplyr::mutate(violent_crime_per_capita = violent_crime/pop) %>% dplyr::mutate(per_total_per_capita = violent_crime_per_capita/sum(violent_crime_per_capita))
