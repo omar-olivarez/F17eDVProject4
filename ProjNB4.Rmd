@@ -77,9 +77,15 @@ Let us take a look at the dataset's column names to see which visualizations wor
 ```{r}
 names(df)
 ```
-## Crime Rates Decreasing, But Proportions Remain the Same (Scatterplot)
+## Crime Rates Decrease, But Proportions Remain the Same (Line Graph)
 
-### Changing the Data We Have to Compare Crime Rates to Crime Proportions (Reformat and Transform)
+### Changing the Data We Have to Compare Crime Rates to Crime Proportions (Reformat,Transform, & Visualize)
+Click on the 'Code' button below to see our code. First, we selected the columns for crime rates per 100,000 people and mutated them to be decimals from 0 to 1. 
+
+Next, we took the columns that had the absolute number of occurrences for each type of crime, and divided each by the total number of crimes in that year to get each crime's proportion of occurrences per year.
+
+We overlayed these two newly mutated columns to be able to compare crime rates over time to proportions of crimes over time. Below we can see our findings. **It can be observed that although crime rates in general seem to demonstrate a downward trend over the 20 year period, that crime proportions stay relatively stable over time.**
+*(Solid lines depict crime rates while dashed lines depict crime proportions)*
 ```{r}
 df2 <- df%>% dplyr::mutate(violent_crime_rate = violent_crime_rate / 100000, murder_rate = murder_rate / 100000, rape_rate = rape_rate / 100000, robbery_rate = robbery_rate / 100000, aggravated_assault_rate = aggravated_assault_rate / 100000, property_crime_rate = property_crime_rate / 100000, burglary_rate = burglary_rate / 100000, larceny_theft_rate = larceny_theft_rate / 100000, motor_vehicle_theft_rate = motor_vehicle_theft / pop) %>%tidyr::gather(violent_crime_rate, murder_rate, rape_rate, aggravated_assault_rate, property_crime_rate, burglary_rate, larceny_theft_rate, motor_vehicle_theft_rate, key = "crime", value = "rate_per_capita")
 
@@ -95,9 +101,14 @@ renderPlot({
   p
   })
 ```
-### Transform
 
-### Visualize 
+## Cumulative Distribution of Crimes
+In the following example, we used gather, group by, cume_dist, arrange, summarise, and mutate to evaluate the cumulative distribution of crimes. See the table below on how crimes rank from highest to lowest. Click on the 'code' button to see our code.
+
+```{r}
+df5 <- df %>% dplyr::select(violent_crime, murder, rape, robbery, agg_assault, property_crime, burglary, larceny_theft, motor_vehicle_theft) %>% tidyr::gather(violent_crime:motor_vehicle_theft, key = "crime", value = "count") %>% dplyr::group_by(crime) %>% summarise(count = sum(count)) %>% dplyr::arrange(desc(count)) %>% dplyr::mutate(crime_percent = cume_dist(count))
+shiny::renderDataTable(df5)
+```
 
 ## Boxplot
 
