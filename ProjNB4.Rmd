@@ -111,9 +111,12 @@ shiny::renderDataTable(df5)
 ```
 
 
+<<<<<<< HEAD
+=======
 ### 20 Years at a Glance: Diminished Crime Rates from 1993 to 2013 
 The bar chart below shows the different crime rate based on the year. To get the specific colums from the csv file, select is needed combined with the input panel.
 
+>>>>>>> 7d3e692a938a160ce03960948809c0c4b885b3ad
 ```{r}
 crimes <- c("violent_crime_rate","murder_rate","rape_rate","robbery_rate","aggravated_assault_rate","property_crime_rate","burglary_rate","larceny_theft_rate")
 
@@ -128,6 +131,40 @@ renderPlot({
   })
 ```
 
+<<<<<<< HEAD
+In the FBI's Uniform Crime Reporting (UCR) Program, violent crime is composed of four offenses: murder and nonnegligent manslaughter, forcible rape, robbery, and aggravated assault. 
+
+### Percent rank of violent crime throughout the years. 
+
+We can look at what year hosted the highest percentage of crimes of violent crimes in the data. 
+
+```{r}
+pcnt_violent = df %>% dplyr::select(year, pop, violent_crime_rate) %>% dplyr::mutate(prcnt = percent_rank(violent_crime_rate)) %>% dplyr::arrange(year)
+
+shiny::renderDataTable(pcnt_violent)
+```
+
+As we can see there has been a decreasing tredn in violent crimes even when population has been stedily increasing. 
+
+### Change in different crimes across the years.
+
+Using lag we can calculate the change in difference of crime throughout the years. 
+
+```{r}
+crime_change = df %>% dplyr::select(year, pop, robbery_rate, burglary_rate, larceny_theft_rate) %>% 
+  dplyr::mutate(delta_robbery_rate = robbery_rate - lag(robbery_rate), delta_burglary_rate = burglary_rate - lag(burglary_rate), delta_larceny_theft = larceny_theft_rate - lag(larceny_theft_rate))
+
+shiny::renderDataTable(crime_change)
+
+crime_changevz = crime_change %>% dplyr::select(year, delta_robbery_rate, delta_burglary_rate, delta_larceny_theft) %>% tidyr::gather(delta_robbery_rate:delta_larceny_theft, key = "crime_type", value = "delta") %>% dplyr::arrange(year)
+
+renderPlot({
+  ggplot(crime_changevz, aes(x = year, y = delta, color = crime_type)) + geom_line()
+})
+```
+
+As we can see the changes in crime rates follow each other, with robbery having the highest amount of changes while larcerny and theft have the lowest changes. 
+=======
 
 ## PieChart of Violent Crimes
 The pie chart below is an example of mutate to get the perecent for total violent crime. 
@@ -145,3 +182,4 @@ renderPlot({
 })
 
 ```
+>>>>>>> 7d3e692a938a160ce03960948809c0c4b885b3ad
